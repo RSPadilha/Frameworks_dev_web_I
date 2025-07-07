@@ -1,0 +1,6 @@
+@Frameworks_dev_web_I_HostAddress = http://localhost:5030
+
+GET {{Frameworks_dev_web_I_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
