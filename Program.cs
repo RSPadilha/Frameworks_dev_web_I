@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Frameworks_dev_web_I.Data;
+using DotNetEnv;
+
+Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
