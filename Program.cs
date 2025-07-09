@@ -16,8 +16,13 @@ if (!string.IsNullOrEmpty(port))
 builder.Services.AddControllers();
 
 // Configura o DbContext com a string de conexão do appsettings.json
+var baseConnStr = builder.Configuration.GetConnectionString("DefaultConnection");
+if (baseConnStr == null)
+    throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+var connStr = baseConnStr.Replace("Password", $"Password={Environment.GetEnvironmentVariable("DB_PASSWORD")}");
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connStr));
 
 var app = builder.Build();
 
