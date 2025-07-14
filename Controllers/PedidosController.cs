@@ -14,9 +14,9 @@ namespace Frameworks_dev_web_I.Controllers
 
       [HttpGet]
       public async Task<ActionResult<IEnumerable<Pedido>>> Get() => await _context.Pedidos
-          .Include(p => p.Cliente)
-          .Include(p => p.Atendente)
-          .Include(p => p.Servico)
+         //  .Include(p => p.Cliente)
+         //  .Include(p => p.Atendente)
+         //  .Include(p => p.Servico)
           .ToListAsync();
 
       [HttpGet("{id}")]

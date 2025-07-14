@@ -7,8 +7,8 @@ namespace Frameworks_dev_web_I.Models
    {
       public long Id { get; set; }
       public long IdCliente { get; set; }
-      public long IdAtendente { get; set; }
-      public long IdServico { get; set; }
+      public long? IdAtendente { get; set; }
+      public long? IdServico { get; set; }
       public string? Descricao { get; set; }
       public DateTime DataCriacao { get; set; }
       public string? Status { get; set; }

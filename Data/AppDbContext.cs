@@ -12,6 +12,7 @@ namespace Frameworks_dev_web_I.Data
       public DbSet<Pedido> Pedidos { get; set; }
       public DbSet<Historico> Historicos { get; set; }
       public DbSet<Chat> Chats { get; set; }
+      public DbSet<Endereco> Enderecos { get; set; }
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
@@ -22,18 +23,20 @@ namespace Frameworks_dev_web_I.Data
             entity.Property(u => u.Id).HasColumnName("id");
             entity.Property(u => u.Nome).HasColumnName("nome");
             entity.Property(u => u.Email).HasColumnName("email");
-            entity.Property(u => u.Senha).HasColumnName("senha");
             entity.Property(u => u.Tipo).HasColumnName("tipo");
             entity.Property(u => u.DataCadastro).HasColumnName("dataCadastro");
+            entity.Property(u => u.Telefone).HasColumnName("telefone");
          });
+
          modelBuilder.Entity<Servico>().ToTable("servicos");
          modelBuilder.Entity<Servico>(entity =>
          {
             entity.Property(s => s.Id).HasColumnName("id");
             entity.Property(s => s.Nome).HasColumnName("nome");
             entity.Property(s => s.Descricao).HasColumnName("descricao");
-            entity.Property(s => s.PrecoBase).HasColumnName("precobase");
+            entity.Property(s => s.PrecoBase).HasColumnName("precoBase");
          });
+
          modelBuilder.Entity<Pedido>().ToTable("pedidos");
          modelBuilder.Entity<Pedido>(entity =>
          {
@@ -46,6 +49,7 @@ namespace Frameworks_dev_web_I.Data
             entity.Property(p => p.Status).HasColumnName("status");
             entity.Property(p => p.DataConclusao).HasColumnName("dataConclusao");
          });
+
          modelBuilder.Entity<Historico>().ToTable("historico");
          modelBuilder.Entity<Historico>(entity =>
          {
@@ -55,6 +59,7 @@ namespace Frameworks_dev_web_I.Data
             entity.Property(h => h.StatusNovo).HasColumnName("statusNovo");
             entity.Property(h => h.ModificadoPor).HasColumnName("modificadoPor");
          });
+
          modelBuilder.Entity<Chat>().ToTable("chat");
          modelBuilder.Entity<Chat>(entity =>
          {
@@ -63,6 +68,21 @@ namespace Frameworks_dev_web_I.Data
             entity.Property(c => c.IdRemetente).HasColumnName("idRemetente");
             entity.Property(c => c.Mensagem).HasColumnName("mensagem");
             entity.Property(c => c.CreatedAt).HasColumnName("created_at");
+         });
+
+         modelBuilder.Entity<Endereco>().ToTable("endereco");
+         modelBuilder.Entity<Endereco>(entity =>
+         {
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+            entity.Property(e => e.Cep).HasColumnName("cep");
+            entity.Property(e => e.Estado).HasColumnName("estado");
+            entity.Property(e => e.Cidade).HasColumnName("cidade");
+            entity.Property(e => e.Rua).HasColumnName("rua");
+            entity.Property(e => e.Bairro).HasColumnName("bairro");
+            entity.Property(e => e.Numero).HasColumnName("numero");
+            entity.Property(e => e.Complemento).HasColumnName("complemento");
+            entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
          });
 
          // Relacionamento Pedido - Cliente (Usuario)
@@ -113,6 +133,13 @@ namespace Frameworks_dev_web_I.Data
              .WithMany(u => u.ChatsRemetente)
              .HasForeignKey(c => c.IdRemetente)
              .OnDelete(DeleteBehavior.Restrict);
+
+         // Relacionamento Endereco - Usuario
+         modelBuilder.Entity<Endereco>()
+             .HasOne(e => e.Usuario)
+             .WithMany(u => u.Enderecos)
+             .HasForeignKey(e => e.IdUsuario)
+             .OnDelete(DeleteBehavior.Cascade);
       }
    }
 }
