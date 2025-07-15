@@ -21,7 +21,12 @@ builder.Services.AddCors(options =>
 //     builder.WebHost.UseUrls($"http://*:{port}");
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
 
 // Configura o DbContext com a string de conexão do appsettings.json
 var baseConnStr = builder.Configuration.GetConnectionString("DefaultConnection");

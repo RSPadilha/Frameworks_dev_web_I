@@ -16,5 +16,6 @@ namespace Frameworks_dev_web_I.Models
       public long? IdUsuario { get; set; }
 
       public Usuario? Usuario { get; set; }
+      public ICollection<Pedido>? Pedidos { get; set; }
    }
 }

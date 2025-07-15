@@ -9,6 +9,7 @@ namespace Frameworks_dev_web_I.Models
       public long IdCliente { get; set; }
       public long? IdAtendente { get; set; }
       public long? IdServico { get; set; }
+      public long? IdEndereco { get; set; }
       public string? Descricao { get; set; }
       public DateTime DataCriacao { get; set; }
       public string? Status { get; set; }
@@ -17,6 +18,7 @@ namespace Frameworks_dev_web_I.Models
       public Usuario? Cliente { get; set; }
       public Usuario? Atendente { get; set; }
       public Servico? Servico { get; set; }
+      public Endereco? Endereco { get; set; }
       public ICollection<Historico>? Historicos { get; set; }
       public ICollection<Chat>? Chats { get; set; }
    }

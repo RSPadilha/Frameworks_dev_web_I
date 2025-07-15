@@ -44,6 +44,7 @@ namespace Frameworks_dev_web_I.Data
             entity.Property(p => p.IdCliente).HasColumnName("idCliente");
             entity.Property(p => p.IdAtendente).HasColumnName("idAtendente");
             entity.Property(p => p.IdServico).HasColumnName("idServico");
+            entity.Property(p => p.IdEndereco).HasColumnName("idEndereco");
             entity.Property(p => p.Descricao).HasColumnName("descricao");
             entity.Property(p => p.DataCriacao).HasColumnName("dataCriacao");
             entity.Property(p => p.Status).HasColumnName("status");
@@ -140,6 +141,13 @@ namespace Frameworks_dev_web_I.Data
              .WithMany(u => u.Enderecos)
              .HasForeignKey(e => e.IdUsuario)
              .OnDelete(DeleteBehavior.Cascade);
+
+         // Relacionamento Pedido - Endereco
+         modelBuilder.Entity<Pedido>()
+             .HasOne(p => p.Endereco)
+             .WithMany(e => e.Pedidos)
+             .HasForeignKey(p => p.IdEndereco)
+             .OnDelete(DeleteBehavior.Restrict);
       }
    }
 }

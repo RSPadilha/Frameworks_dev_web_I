@@ -13,27 +13,99 @@ namespace Frameworks_dev_web_I.Controllers
       public EnderecosController(AppDbContext context) => _context = context;
 
       [HttpGet]
-      public async Task<ActionResult<IEnumerable<Endereco>>> Get() => await _context.Enderecos
-         .Include(e => e.Usuario)
-         .ToListAsync();
+      public async Task<ActionResult<IEnumerable<object>>> Get()
+      {
+         var enderecos = await _context.Enderecos
+            .Include(e => e.Usuario)
+            .Select(e => new
+            {
+               e.Id,
+               e.CreatedAt,
+               e.Cep,
+               e.Estado,
+               e.Cidade,
+               e.Rua,
+               e.Bairro,
+               e.Numero,
+               e.Complemento,
+               e.IdUsuario,
+               Usuario = e.Usuario != null ? new
+               {
+                  e.Usuario.Id,
+                  e.Usuario.Nome,
+                  e.Usuario.Email,
+                  e.Usuario.Tipo,
+                  e.Usuario.Telefone
+               } : null
+            })
+            .ToListAsync();
+
+         return Ok(enderecos);
+      }
 
       [HttpGet("{id}")]
-      public async Task<ActionResult<Endereco>> Get(long id)
+      public async Task<ActionResult<object>> Get(long id)
       {
          var endereco = await _context.Enderecos
             .Include(e => e.Usuario)
-            .FirstOrDefaultAsync(e => e.Id == id);
+            .Where(e => e.Id == id)
+            .Select(e => new
+            {
+               e.Id,
+               e.CreatedAt,
+               e.Cep,
+               e.Estado,
+               e.Cidade,
+               e.Rua,
+               e.Bairro,
+               e.Numero,
+               e.Complemento,
+               e.IdUsuario,
+               Usuario = e.Usuario != null ? new
+               {
+                  e.Usuario.Id,
+                  e.Usuario.Nome,
+                  e.Usuario.Email,
+                  e.Usuario.Tipo,
+                  e.Usuario.Telefone
+               } : null
+            })
+            .FirstOrDefaultAsync();
+
          if (endereco == null) return NotFound();
          return endereco;
       }
 
       [HttpGet("usuario/{usuarioId}")]
-      public async Task<ActionResult<IEnumerable<Endereco>>> GetByUsuario(long usuarioId)
+      public async Task<ActionResult<IEnumerable<object>>> GetByUsuario(long usuarioId)
       {
-         return await _context.Enderecos
+         var enderecos = await _context.Enderecos
             .Where(e => e.IdUsuario == usuarioId)
             .Include(e => e.Usuario)
+            .Select(e => new
+            {
+               e.Id,
+               e.CreatedAt,
+               e.Cep,
+               e.Estado,
+               e.Cidade,
+               e.Rua,
+               e.Bairro,
+               e.Numero,
+               e.Complemento,
+               e.IdUsuario,
+               Usuario = e.Usuario != null ? new
+               {
+                  e.Usuario.Id,
+                  e.Usuario.Nome,
+                  e.Usuario.Email,
+                  e.Usuario.Tipo,
+                  e.Usuario.Telefone
+               } : null
+            })
             .ToListAsync();
+
+         return Ok(enderecos);
       }
 
       [HttpPost]
