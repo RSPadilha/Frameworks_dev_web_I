@@ -16,9 +16,9 @@ builder.Services.AddCors(options =>
 
 // Configura a porta do Render se existir a variável de ambiente PORT
 // Testando
-var port = Environment.GetEnvironmentVariable("PORT");
-if (!string.IsNullOrEmpty(port))
-    builder.WebHost.UseUrls($"http://*:{port}");
+// var port = Environment.GetEnvironmentVariable("PORT");
+// if (!string.IsNullOrEmpty(port))
+//     builder.WebHost.UseUrls($"http://*:{port}");
 
 // Add services to the container.
 builder.Services.AddControllers();
