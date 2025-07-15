@@ -251,7 +251,6 @@ namespace Frameworks_dev_web_I.Controllers
          await _context.SaveChangesAsync();
          return CreatedAtAction(nameof(Get), new { id = pedido.Id }, pedido);
       }
-
       [HttpPut("{id}")]
       public async Task<IActionResult> Put(long id, [FromBody] StatusUpdateRequest request)
       {
@@ -260,22 +259,40 @@ namespace Frameworks_dev_web_I.Controllers
             var pedido = await _context.Pedidos.FindAsync(id);
             if (pedido == null) return NotFound();
 
-            // Extrair o status do body da requisição
-            string? novoStatus = request.Status;
-            if (string.IsNullOrEmpty(novoStatus))
+            // Verificar se o status foi fornecido
+            if (string.IsNullOrEmpty(request.Status))
             {
                return BadRequest("Status é obrigatório");
             }
 
+            // Verificar se o status realmente mudou
+            string statusAnterior = pedido.Status ?? "";
+            if (statusAnterior.Equals(request.Status, StringComparison.OrdinalIgnoreCase))
+            {
+               return Ok("Status não foi alterado");
+            }
+
             // Atualizar apenas o status
-            pedido.Status = novoStatus;
+            pedido.Status = request.Status;
 
             // Se o status for "Concluído", definir a data de conclusão
-            if (novoStatus.ToLower() == "concluído" || novoStatus.ToLower() == "concluido")
+            if (request.Status.ToLower() == "concluído" || request.Status.ToLower() == "concluido")
             {
                pedido.DataConclusao = DateTime.UtcNow;
             }
+
+            // Criar registro de histórico
+            var historico = new Historico
+            {
+               IdPedido = id,
+               DataAlteracao = DateTime.UtcNow,
+               StatusNovo = request.Status,
+               ModificadoPor = null // Pode ser configurado para receber o ID do usuário que fez a alteração
+            };
+
+            _context.Historicos.Add(historico);
             await _context.SaveChangesAsync();
+
             return NoContent();
          }
          catch (Exception ex)
