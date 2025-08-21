@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Frameworks_dev_web_I.Data;
 using DotNetEnv;
 
+// Carrega variáveis de ambiente do arquivo .env (para desenvolvimento local)
+// Em produção, configure DB_PASSWORD nas variáveis de ambiente do servidor
 Env.Load();
 
 
@@ -32,6 +34,9 @@ builder.Services.AddControllers()
 var baseConnStr = builder.Configuration.GetConnectionString("DefaultConnection");
 if (baseConnStr == null)
     throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+// Insere a senha do banco de dados da variável de ambiente DB_PASSWORD
+// A senha é carregada do arquivo .env (desenvolvimento) ou variável de ambiente (produção)
 var connStr = baseConnStr.Replace("Password", $"Password={Environment.GetEnvironmentVariable("DB_PASSWORD")}");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
